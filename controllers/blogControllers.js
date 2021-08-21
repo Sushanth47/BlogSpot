@@ -2,53 +2,40 @@
 const Blog = require('../models/blog');
 
 
-const blog_index = (req, res) => {
-    Blog.find().sort({ createdAt: -1})
-        .then((result) => {
-        res.render('blogs/index', { title: 'All Blogs', blogs: result})
-        })
-        .catch((err) => {
-        console.log(err);
-        })
+const blog_index = async (req, res) => {
+   await Blog.find().sort({ createdAt: -1});
+    return res.render('blogs/index', { title: 'All Blogs', blogs: result})  
 }
 
-const blog_details = (req, res) =>{
+const blog_details = async (req, res) =>{
     const id = req.params.id;
-    Blog.findById(id)
-     .then(result => {
-    res.render('blogs/details', { blog: result, title: 'Blog Details' })
-    })
-     .catch(err => {
+    var blogFind = await Blog.findById(id)
+    if(blogFind){
+    return res.render('blogs/details', { blog: result, title: 'Blog Details' })
+    }else{
     res.status(404).render('404', {title: 'Blog not found'})
-    });
+    }
+    
 }
 
-const blog_create_get = (req, res) =>{
-    res.render('blogs/create', { title: 'Create a new Blog' });
+const blog_create_get = async (req, res) =>{
+    return res.render('blogs/create', { title: 'Create a new Blog' });
 }
 
-const blog_create_post = (req, res) => {
+const blog_create_post = async (req, res) => {
     const blog = new Blog(req.body);
 
-  blog.save()
-    .then((result) => {
-    res.redirect('/blogs');
-    })
-    .catch((err) => {
-    console.log(err);
-    });
+  await blog.save()
+   return res.redirect('/blogs');
+   
 }
 
-const blog_delete = (req, res) =>{
+const blog_delete = async (req, res) =>{
     const id = req.params.id;
 
-    Blog.findByIdAndDelete(id)
-        .then(result => {
-        res.json({ redirect: '/blogs' })
-        })
-        .catch(err =>{
-        console.log(err);
-        });
+   await Blog.findByIdAndDelete(id)
+
+   return res.json({ redirect: '/blogs' })
 }
 
 module.exports = {
