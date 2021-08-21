@@ -8,7 +8,9 @@ const app = express();
 const dbURI = 'mongodb+srv://chandu:test123@nodetest.iqvc6.mongodb.net/nodetest?retryWrites=true&w=majority'
 // connect to mongodb
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
- .then(result => app.listen(3000))
+ .then(result => app.listen(3000, function(){
+   console.log(`Hello to 3000`)
+ }))
  .catch(err => console.log(err));
 
  //register view engine

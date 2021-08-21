@@ -3,7 +3,7 @@ const Blog = require('../models/blog');
 
 
 const blog_index = async (req, res) => {
-   await Blog.find().sort({ createdAt: -1});
+   var result =await Blog.find().sort({ createdAt: -1});
     return res.render('blogs/index', { title: 'All Blogs', blogs: result})  
 }
 
@@ -11,7 +11,7 @@ const blog_details = async (req, res) =>{
     const id = req.params.id;
     var blogFind = await Blog.findById(id)
     if(blogFind){
-    return res.render('blogs/details', { blog: result, title: 'Blog Details' })
+    return res.render('blogs/details', { blog: blogFind, title: 'Blog Details' })
     }else{
     res.status(404).render('404', {title: 'Blog not found'})
     }
