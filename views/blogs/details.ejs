@@ -1,13 +1,30 @@
 <html lang="en">
   <%- include("../partials/head.ejs") %>
-
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    #contentp {
+      font-family: "Open Sans", sans-serif;
+      line-height: 180%;
+      /* background-color: #fdf2d5;
+       */
+    }
+  </style>
   <body>
     <%- include("../partials/nav.ejs") %>
 
     <div class="details content">
-      <h2><%= blog.title %></h2>
+      <h1 style="margin-bottom: 10px"><%= blog[0].title %></h1>
+
+      <h6>By Sushanth Kumar <%=(blog[0].createdAt)%></h6>
       <div class="content">
-        <p><%= blog.body %></p>
+        <p id="contentp"><%= blog[0].body %></p>
       </div>
       <a class="delete" data-doc="<%= blog._id %>">
         <img src="/trashcan.svg" alt="delete icon" />

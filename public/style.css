@@ -58,6 +58,11 @@ h3 {
 }
 .content {
   margin-left: 20px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  padding-left: 5px;
+  /* font-size: 12px; */
+  /* color: #039; */
+  /* background-color: #fcebb6; */
 }
 
 .blogs a {
@@ -65,6 +70,7 @@ h3 {
   margin: 40px 0;
   padding-left: 30px;
   border-left: 6px solid crimson;
+  border-right: 1px solid black;
 }
 
 .blogs a:hover h3 {
@@ -82,11 +88,9 @@ h3 {
 }
 .delete:hover {
   cursor: pointer;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
+  filter: drop-shadow(2px 2px 10px rgb(255, 3, 3));
 }
-/* index styles */
-/* details styles */
-/* create styles */
+
 .create-blog form {
   max-width: 400px;
   margin: 0 auto;

@@ -1,16 +1,44 @@
 // blog_index, blog_detailes, blog_create_get, blog_create_post, blog_delete
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const Blog = require("../models/blog");
+const moment = require("moment");
 //hey
 
 const blog_index = async (req, res) => {
-  var result = await Blog.find().sort({ createdAt: -1 });
+  var result = await Blog.aggregate([
+    {
+      $project: {
+        title: 1,
+        snippet: 1,
+        body: 1,
+        createdAt: 1,
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ]);
   return res.render("blogs/index", { title: "All Blogs", blogs: result });
 };
 
 const blog_details = async (req, res) => {
   const id = req.params.id;
   var blogFind = await Blog.findById(id);
-  if (blogFind) {
+  blogFind = await Blog.aggregate([
+    {
+      $match: { _id: ObjectId(req.params.id) },
+    },
+    {
+      $project: {
+        title: 1,
+        snippet: 1,
+        body: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+  if (blogFind.length > 0) {
     return res.render("blogs/details", {
       blog: blogFind,
       title: "Blog Details",
@@ -25,9 +53,7 @@ const blog_create_get = async (req, res) => {
 };
 
 const blog_create_post = async (req, res) => {
-  const blog = new Blog(req.body);
-
-  await blog.save();
+  await Blog.create(req.body);
   return res.redirect("/blogs");
 };
 
