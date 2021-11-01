@@ -37,7 +37,16 @@ app.get("/", (req, res) => {
   console.log("hey");
   res.redirect("/blogs");
 });
+app.get("/sysinfo", async (req, res) => {
+  const si = require("systeminformation");
 
+  // promises style - new since version 3
+  si.cpu()
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
+
+  return res.json("done");
+});
 app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
 });
