@@ -7,11 +7,22 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <style>
     #contentp {
       font-family: "Open Sans", sans-serif;
       line-height: 180%;
+      font-weight: 700;
       /* background-color: #fdf2d5;
        */
     }
@@ -22,10 +33,23 @@
     <div class="details content">
       <h1 style="margin-bottom: 10px"><%= blog[0].title %></h1>
 
-      <h6>By Sushanth Kumar <%=(blog[0].createdAt)%></h6>
-      <div class="content">
-        <p id="contentp"><%= blog[0].body %></p>
+      <h4 style="font-family: 'Open Sans', sans-serif">By Sushanth Kumar</h4>
+      <p style="position: relative; font-family: 'Open Sans', sans-serif">
+        <%=blog[0].createdAt.toString().substr(0, 33)%>
+      </p>
+      <%if(blog[0].images){%>
+      <img
+        src="<%=blog[0].images[0]%>"
+        height="auto"
+        width="auto"
+        style="position: relative; left: 300px"
+      />
+      <%}%>
+      <br />
+      <div class="content" style="margin-top: 20px">
+        <span id="contentp"><%= blog[0].body %></span>
       </div>
+      <%console.log(blog[0])%>
       <a class="delete" href="/blogs/delete/<%=blog[0]._id%>">
         <img src="/trashcan.svg" alt="delete icon" />
       </a>

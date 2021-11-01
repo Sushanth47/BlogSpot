@@ -32,7 +32,7 @@ const blog_details = async (req, res) => {
         snippet: 1,
         body: 1,
         createdAt: 1,
-        image: 1,
+        images: 1,
       },
     },
   ]);

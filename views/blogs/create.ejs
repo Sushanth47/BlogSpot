@@ -1,4 +1,10 @@
 <html lang="en">
+  <head>
+    <link
+      href="https://cdn.quilljs.com/1.0.0/quill.snow.css"
+      rel="stylesheet"
+    />
+  </head>
   <%- include('../partials/head.ejs')%>
   <body>
     <%- include('../partials/nav.ejs') %>
@@ -13,9 +19,17 @@
         <textarea id="body" name="body" required></textarea>
         <label for="body">Blog image:</label>
         <input type="text" id="image" name="img" required />
+
         <button>Submit</button>
       </form>
     </div>
+
     <%- include('../partials/footer.ejs')%>
   </body>
+  <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+  <script>
+    var quill = new Quill("#editor", {
+      theme: "snow",
+    });
+  </script>
 </html>

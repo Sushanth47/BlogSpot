@@ -41,8 +41,9 @@ app.get("/sysinfo", async (req, res) => {
   const si = require("systeminformation");
 
   // promises style - new since version 3
-  si.cpu()
-    .then((data) => console.log(data))
+  await si
+    .cpu()
+    .then((data) => console.log(data.flags, data.vendor))
     .catch((error) => console.error(error));
 
   return res.json("done");
