@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("express-async-errors");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -7,8 +8,7 @@ const { errorHandler } = require("./middleware/error");
 //const { render } = require('ejs');
 const app = express();
 
-const dbURI =
-  "mongodb+srv://chandu:test123@nodetest.iqvc6.mongodb.net/nodetest?retryWrites=true&w=majority";
+const dbURI = process.env.DB_URI;
 // connect to mongodb
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
