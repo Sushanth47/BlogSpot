@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const Blog = require("../models/blog");
-
+const { middlewareasync } = require("../middleware/asyncMiddleware");
 const blog_index = async (req, res) => {
   var result = await Blog.aggregate([
     {
