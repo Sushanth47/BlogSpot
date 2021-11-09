@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
 exports.checkauth = async (req, res) => {
   if (!req.cookies.token) {
@@ -13,9 +14,15 @@ exports.checkauth = async (req, res) => {
         (checkdata.vendor = data.vendor)
       )
       .catch((error) => console.error(error));
-    var guest = await Guest.findOne({flags:checkdata.flags, vendor:checkdata.vendor});
+    var guest = await Guest.findOne({
+      flags: checkdata.flags,
+      vendor: checkdata.vendor,
+    });
     req.user = guest;
     res.locals.currentUser = req.user;
+    next();
+  } else {
+    await userauth();
     next();
   }
 };
@@ -28,8 +35,8 @@ async function userauth() {
     var user = await User.findOne({ _id: decoded._id });
     req.user = user;
     res.locals.currentUser = req.user;
-   //  user.save();
-    next();
+    //  user.save();
+    // next();
   } catch (err) {
     console.log(err);
   }

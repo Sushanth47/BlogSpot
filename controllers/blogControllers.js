@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const Blog = require("../models/blog");
-const axios = require("axios");
+
 const blog_index = async (req, res) => {
+  // console.log(req);
   var result = await Blog.aggregate([
     {
       $project: {
@@ -24,7 +25,6 @@ const get_blog_details = async (req, res) => {
 };
 
 const blog_details = async (req, res) => {
-  // console.log(req.query.id);
   var blogFind = await Blog.aggregate([
     {
       $match: { _id: ObjectId(req.query.id) },
@@ -35,21 +35,25 @@ const blog_details = async (req, res) => {
         snippet: 1,
         body: 1,
         createdAt: 1,
-        images: 1,
+        date: {
+          $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+        },
       },
     },
   ]);
-  // console.log(blogFind);
-  setTimeout(() => {
-    return res.status(200).json({
-      blog: blogFind,
-      title: "Blog Details",
-    });
-  }, 2500);
+  console.log(blogFind);
+
+  return res.status(200).json({
+    blog: blogFind,
+    title: "Blog Details",
+  });
 };
 
 const blog_create_get = async (req, res) => {
-  return res.render("blogs/create", { title: "Create a new Blog" });
+  return res.render("blogs/create", {
+    title: "Create a new Blog",
+    message: req.flash("message"),
+  });
 };
 
 const blog_create_post = async (req, res) => {
@@ -59,6 +63,7 @@ const blog_create_post = async (req, res) => {
       body: JSON.stringify(req.body.body),
       snippet: req.body.snippet,
     });
+    req.flash("message", "Blog Created Successfully");
     return res.redirect("/blogs");
   } catch (err) {
     console.log(err);

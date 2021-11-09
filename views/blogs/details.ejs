@@ -21,22 +21,11 @@
     />
   </head>
   <style>
-    #contentp {
-      font-family: "Open Sans", sans-serif;
-      line-height: 180%;
-      font-weight: 700;
-      /* background-color: #fdf2d5;
-       */
-    }
-    .ql-toolbar {
-      display: none;
-    }
     #editor {
       border: none;
       width: 1200px;
       scroll-behavior: smooth;
       scroll-snap-align: inherit;
-      /* height: 1400px; */
     }
   </style>
   <body>
@@ -72,20 +61,9 @@
       //     .then((data) => (window.location.href = data.redirect))
       //     .catch((err) => console.log(err));
       // });
-      var toolbarOptions = [
-        // ["bold", "italic", "underline"],
-        // [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        // [{ list: "ordered" }, { list: "bullet" }],
-        // ["code-block"],
-        // [{ indent: "-1" }, { indent: "+1" }],
-        // ["link", "image", "formula"],
-        // [{ align: [] }],
-      ];
+
       var quill = new Quill("#editor", {
-        theme: "snow",
-        modules: {
-          toolbar: toolbarOptions,
-        },
+        theme: "bubble",
         readOnly: true,
       });
       console.log(window.location.pathname.substr(13, 31));
@@ -96,17 +74,12 @@
           document.getElementById("title").innerHTML =
             response.data.blog[0].title;
           document.getElementById("createdat").innerHTML =
-            "Created AT: " + response.data.blog[0].createdAt;
+            "Created AT: " + response.data.blog[0].date;
           quill.setContents(JSON.parse(response.data.blog[0].body));
         });
       }
 
       getData();
-
-      // console.log(
-      //   quill.setContents(document.getElementById("contentp").innerHTML),
-      //   "value is baleu"
-      // );
     </script>
   </body>
 </html>

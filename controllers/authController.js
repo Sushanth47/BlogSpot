@@ -1,6 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-
+const User = require("../models/user");
 async function generateAuthToken(name, _id, res) {
   const expiration = 604800000;
   const token = jwt.sign({ _id: _id, name: name }, process.env.jwtPrivateKey, {
@@ -37,3 +37,5 @@ exports.userauth = async (req, res) => {
   var string = generateAuthToken(name, user._id, res);
   return res.status(200).redirect("blogs");
 };
+
+exports.logOut = async (req, res) => {};
