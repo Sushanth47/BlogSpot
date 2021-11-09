@@ -52,7 +52,6 @@ const blog_details = async (req, res) => {
 const blog_create_get = async (req, res) => {
   return res.render("blogs/create", {
     title: "Create a new Blog",
-    message: req.flash("message"),
   });
 };
 
@@ -63,7 +62,6 @@ const blog_create_post = async (req, res) => {
       body: JSON.stringify(req.body.body),
       snippet: req.body.snippet,
     });
-    req.flash("message", "Blog Created Successfully");
     return res.redirect("/blogs");
   } catch (err) {
     console.log(err);
