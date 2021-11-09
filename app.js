@@ -3,6 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const blogRoutes = require("./routes/blogRoutes");
 const { errorHandler } = require("./middleware/error");
 //const { render } = require('ejs');
@@ -26,14 +27,15 @@ app.set("view engine", "ejs");
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
-app.use("/blogs", blogRoutes);
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
 });
-app.use(errorHandler);
+app.use("/blogs", blogRoutes);
 //routes
 
 app.get("/", (req, res) => {

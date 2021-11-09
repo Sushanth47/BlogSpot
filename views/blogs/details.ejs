@@ -7,6 +7,8 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,30 +28,33 @@
       /* background-color: #fdf2d5;
        */
     }
+    .ql-toolbar {
+      display: none;
+    }
+    #editor {
+      border: none;
+      width: 1200px;
+      scroll-behavior: smooth;
+      scroll-snap-align: inherit;
+      /* height: 1400px; */
+    }
   </style>
   <body>
     <%- include("../partials/nav.ejs") %>
 
     <div class="details content">
-      <h1 style="margin-bottom: 10px"><%= blog[0].title %></h1>
+      <h1 id="title" style="margin-bottom: 10px"></h1>
 
       <h4 style="font-family: 'Open Sans', sans-serif">By Sushanth Kumar</h4>
-      <p style="position: relative; font-family: 'Open Sans', sans-serif">
-        <%=blog[0].createdAt.toString().substr(0, 33)%>
-      </p>
-      <%if(blog[0].images){%>
-      <img
-        src="<%=blog[0].images[0]%>"
-        height="auto"
-        width="auto"
-        style="position: relative; left: 300px"
-      />
-      <%}%>
+      <p
+        id="createdat"
+        style="position: relative; font-family: 'Open Sans', sans-serif"
+      ></p>
+
       <br />
-      <div class="content" style="margin-top: 20px">
-        <span id="contentp"><%= blog[0].body %></span>
-      </div>
-      <a class="delete" href="/blogs/delete/<%=blog[0]._id%>">
+      <div id="editor"></div>
+      <div style="margin-top: 20px"></div>
+      <a class="delete" href="/blogs/delete/">
         <img src="/trashcan.svg" alt="delete icon" />
       </a>
     </div>
@@ -57,16 +62,51 @@
     <%- include("../partials/footer.ejs") %>
 
     <script>
-      const trashcan = document.querySelector("a.delete");
-      trashcan.addEventListener("click", (e) => {
-        const endpoint = `/blogs/${trashcan.dataset.doc}`;
-        fetch(endpoint, {
-          method: "DELETE",
-        })
-          .then((response) => response.json())
-          .then((data) => (window.location.href = data.redirect))
-          .catch((err) => console.log(err));
+      // const trashcan = document.querySelector("a.delete");
+      // trashcan.addEventListener("click", (e) => {
+      //   const endpoint = `/blogs/${trashcan.dataset.doc}`;
+      //   fetch(endpoint, {
+      //     method: "DELETE",
+      //   })
+      //     .then((response) => response.json())
+      //     .then((data) => (window.location.href = data.redirect))
+      //     .catch((err) => console.log(err));
+      // });
+      var toolbarOptions = [
+        // ["bold", "italic", "underline"],
+        // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        // [{ list: "ordered" }, { list: "bullet" }],
+        // ["code-block"],
+        // [{ indent: "-1" }, { indent: "+1" }],
+        // ["link", "image", "formula"],
+        // [{ align: [] }],
+      ];
+      var quill = new Quill("#editor", {
+        theme: "snow",
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        readOnly: true,
       });
+      console.log(window.location.pathname.substr(13, 31));
+      var options = { params: { id: window.location.pathname.substr(13, 31) } };
+      async function getData() {
+        await axios.get("/blogs/blogs", options).then((response) => {
+          console.log(response.data.blog[0]);
+          document.getElementById("title").innerHTML =
+            response.data.blog[0].title;
+          document.getElementById("createdat").innerHTML =
+            "Created AT: " + response.data.blog[0].createdAt;
+          quill.setContents(JSON.parse(response.data.blog[0].body));
+        });
+      }
+
+      getData();
+
+      // console.log(
+      //   quill.setContents(document.getElementById("contentp").innerHTML),
+      //   "value is baleu"
+      // );
     </script>
   </body>
 </html>

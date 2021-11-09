@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const Blog = require("../models/blog");
-const { middlewareasync } = require("../middleware/asyncMiddleware");
+const axios = require("axios");
 const blog_index = async (req, res) => {
   var result = await Blog.aggregate([
     {
@@ -19,12 +19,15 @@ const blog_index = async (req, res) => {
   return res.render("blogs/index", { title: "All Blogs", blogs: result });
 };
 
+const get_blog_details = async (req, res) => {
+  return res.render("blogs/details", { title: "blogDetails" });
+};
+
 const blog_details = async (req, res) => {
-  const id = req.params.id;
-  // var blogFind = await Blog.findById(id);
-  blogFind = await Blog.aggregate([
+  // console.log(req.query.id);
+  var blogFind = await Blog.aggregate([
     {
-      $match: { _id: ObjectId(req.params.id) },
+      $match: { _id: ObjectId(req.query.id) },
     },
     {
       $project: {
@@ -36,14 +39,13 @@ const blog_details = async (req, res) => {
       },
     },
   ]);
-  if (blogFind.length > 0) {
-    return res.render("blogs/details", {
+  // console.log(blogFind);
+  setTimeout(() => {
+    return res.status(200).json({
       blog: blogFind,
       title: "Blog Details",
     });
-  } else {
-    res.status(404).render("404", { title: "Blog not found" });
-  }
+  }, 2500);
 };
 
 const blog_create_get = async (req, res) => {
@@ -51,15 +53,16 @@ const blog_create_get = async (req, res) => {
 };
 
 const blog_create_post = async (req, res) => {
-  var image = [];
-  image.push(req.body.img);
-  await Blog.create({
-    title: req.body.title,
-    body: req.body.body,
-    snippet: req.body.snippet,
-    images: image,
-  });
-  return res.redirect("/blogs");
+  try {
+    await Blog.create({
+      title: req.body.title,
+      body: JSON.stringify(req.body.body),
+      snippet: req.body.snippet,
+    });
+    return res.redirect("/blogs");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const blog_delete = async (req, res) => {
@@ -67,7 +70,7 @@ const blog_delete = async (req, res) => {
 
   await Blog.findByIdAndDelete(id);
 
-  return res.json({ redirect: "/blogs" });
+  return res.redirect(`/blogs`);
 };
 
 module.exports = {
@@ -76,4 +79,5 @@ module.exports = {
   blog_create_get,
   blog_create_post,
   blog_delete,
+  get_blog_details,
 };

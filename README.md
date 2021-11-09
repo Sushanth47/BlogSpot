@@ -1,10 +1,13 @@
 # BlogSpot
 
-Start with an
-$ npm init
+A Blog page to write blogs for any type of topics
 
-Run it with
+**Built Using Node JS and MongoDB**
 
-node app.js
+_Run it using:_
 
-$ $
+npm i
+
+and then
+
+npm start

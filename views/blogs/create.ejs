@@ -1,35 +1,71 @@
 <html lang="en">
-  <head>
-    <link
-      href="https://cdn.quilljs.com/1.0.0/quill.snow.css"
-      rel="stylesheet"
-    />
+  
   </head>
   <%- include('../partials/head.ejs')%>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
   <body>
     <%- include('../partials/nav.ejs') %>
 
     <div class="create-blog content">
-      <form action="/blogs" method="POST">
+      
         <label for="title">Blog title:</label>
         <input type="text" id="title" name="title" required />
+        
         <label for="snippet">Blog snippet:</label>
         <input type="text" id="snippet" name="snippet" required />
         <label for="body">Blog body:</label>
-        <textarea id="body" name="body" required></textarea>
-        <label for="body">Blog image:</label>
-        <input type="text" id="image" name="img" required />
+        <input type="hidden" id="body" name="body" />
+        <div style="width: 80%">
+          <div id="toolbar"></div>
+          <div id="editor"></div>
+        </div>
 
-        <button>Submit</button>
-      </form>
+        <button id="saveDelta">Submit</button>
     </div>
 
     <%- include('../partials/footer.ejs')%>
   </body>
-  <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
   <script>
+    
+   
+    
+
+    var toolbarOptions = [
+      ["bold", "italic", "underline"],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["code-block"],
+      [{ indent: "-1" }, { indent: "+1" }],
+      ["link", "image", "formula"],
+      [{ align: [] }],
+    ];
     var quill = new Quill("#editor", {
       theme: "snow",
+      modules: {
+        toolbar: toolbarOptions,
+      },
     });
+    let data = JSON.stringify({
+      title : document.getElementById('title').value,
+      snippet: document.getElementById('snippet').value,
+      body: quill.getContents(),
+    })
+    let url='/blogs/createPost'
+    $('#saveDelta').click(async function(){
+      console.log('camehere')
+     await axios.post(url,JSON.stringify({
+      title : document.getElementById('title').value,
+      snippet: document.getElementById('snippet').value,
+      body: quill.getContents(),
+    }),{headers:{"Content-Type" : "application/json"}}, 
+    ).then((response)=>console.log(response))
+    .catch((err)=>console.log(err, 'errrrrrrr'));
+    })
+    // $("#saveDelta").click(function () {
+    //   document.getElementById('body').value = quill.getContents();
+    //   console.log(document.getElementById('body').value, 'valueeeee')
+    //   // console.log(delta);
+    // });
   </script>
 </html>
