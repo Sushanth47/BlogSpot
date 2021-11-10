@@ -10,6 +10,11 @@ const userSchema = mongoose.Schema({
     },
   ],
   token: { type: String, default: "" },
+  tags: [
+    {
+      type: String,
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

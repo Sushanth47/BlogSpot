@@ -17,7 +17,7 @@
         <label for="body">Blog body:</label>
         <br>
         <input type="hidden" id="body" name="body" />
-        <div style="width: 80%">
+        <div style="width: 100%">
           <div id="toolbar"></div>
           <div id="editor"></div>
         </div>
@@ -31,11 +31,14 @@
   <script>
     var toolbarOptions = [
       ["bold", "italic", "underline"],
-      [{ header: [1, 2, 3, false] }],
+      [{ header:1 }, {header:2}],
       [{ list: "ordered" }, { list: "bullet" }],
-      ["code-block"],
+      ['blockquote',"code-block"],
       [{ indent: "-1" }, { indent: "+1" }],
+      [{size:['small', 'false', 'large', 'huge']}],
+      [{color:[]}, {background:[]}],
       [ "image", "formula", 'video'],
+      // [{'font':[]}]
       [{ align: [] }],
       ['clean']
     ];
