@@ -16,6 +16,6 @@ router.get("/create", userauth, blogController.blog_create_get);
 
 router.get("/blogs", checkauth, blogController.blog_details);
 
-router.get("/delete/:id", checkauth, blogController.blog_delete);
+router.get("/delete/:id", userauth, blogController.blog_delete);
 
 module.exports = router;
