@@ -34,7 +34,7 @@
     <div class="details content">
       <h1 id="title" style="margin-bottom: 10px"></h1>
 
-      <h4 style="font-family: 'Open Sans', sans-serif">By Sushanth Kumar</h4>
+      <h4 style="font-family: 'Open Sans', sans-serif" id="creatorTag"></h4>
       <p
         id="createdat"
         style="position: relative; font-family: 'Open Sans', sans-serif"
@@ -75,6 +75,8 @@
             response.data.blog[0].title;
           document.getElementById("createdat").innerHTML =
             "Created AT: " + response.data.blog[0].date;
+          document.getElementById("creatorTag").innerHTML =
+            "By: " + response.data.blog[0].author;
           quill.setContents(JSON.parse(response.data.blog[0].body));
         });
       }

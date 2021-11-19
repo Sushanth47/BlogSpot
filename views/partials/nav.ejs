@@ -5,8 +5,10 @@
   </div>
   <ul>
     <li><a href="/blogs/">Blogs</a></li>
-    <li><a href="/blogs/about">About</a></li>
+    <!-- <li><a href="/blogs/about">About</a></li> -->
+
     <%if(!currentUser){%>
+    <li><a href="/auth/signup">Signup</a></li>
     <li><a href="/auth/login">Login</a></li>
     <%}%> <%if(currentUser){%>
     <li><a href="/blogs/create">New blog</a></li>

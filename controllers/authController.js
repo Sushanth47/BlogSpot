@@ -11,7 +11,7 @@ async function generateAuthToken(res, name, _id) {
       expiresIn: process.env.DB_ENV === "testing" ? "1d" : "7d",
     }
   );
-  console.log(token, "token");
+  // console.log(token, "token");
   var obj = {
     token: token,
     _id: 1,
@@ -47,10 +47,10 @@ exports.userauth = async (req, res) => {
 
 exports.signUp = async (req, res) => {
   const { username, password } = req.body;
-  var user = await User.findOne({ email: email });
+  var user = await User.findOne({ name: username });
   if (user) {
     req.flash("message", "User Already Exists");
-    return res.redirect("/auth/login");
+    return res.redirect("/auth/signup");
   }
   var newuser = await User.create({
     name: username,
@@ -58,11 +58,10 @@ exports.signUp = async (req, res) => {
     myBlogs: [],
   });
   await generateAuthToken(res, username, newuser._id);
-
-  newuser.save();
+  return res.redirect("/");
 };
 
 exports.logOut = async (req, res) => {
-  res.clearCookies("token");
+  res.clearCookie("token");
   return res.redirect("/");
 };

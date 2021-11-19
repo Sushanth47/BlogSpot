@@ -40,6 +40,7 @@ const blog_details = async (req, res) => {
         snippet: 1,
         body: 1,
         createdAt: 1,
+        author: 1,
         date: {
           $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
         },
@@ -55,6 +56,7 @@ const blog_details = async (req, res) => {
 };
 
 const blog_create_get = async (req, res) => {
+  console.log(req.user);
   return res.render("blogs/create", {
     title: "Create a new Blog",
   });
@@ -66,6 +68,8 @@ const blog_create_post = async (req, res) => {
       title: req.body.title,
       body: JSON.stringify(req.body.body),
       snippet: req.body.snippet,
+      author: req.user.name,
+      createdBy: req.user._id,
     });
     return res.redirect("/");
   } catch (err) {

@@ -4,7 +4,7 @@ const Guest = require("../models/guest");
 
 exports.checkauth = async (req, res, next) => {
   const token = JSON.stringify(req.cookies);
-  console.log(token, "cookies");
+  // console.log(token, "cookies");
   if (token == "{}") {
     const si = require("systeminformation");
     var checkdata = { flags: "", vendor: "" };
@@ -39,14 +39,15 @@ async function userauth(req, res, next) {
   }
 }
 
-exports.userauth = async (req, res) => {
+exports.userauth = async (req, res, next) => {
   try {
     var token = req.cookies.token.token;
     if (!token) return res.redirect("/auth/login");
     const decoded = jwt.verify(token, process.env.jwtPrivateKey);
-    var user = await User.findOne({ _id: decoded._id }, "name _id tags");
+    var user = await User.findOne({ _id: decoded._id }, "_id token name");
     req.user = user;
     res.locals.currentUser = req.user;
+    next();
   } catch (err) {
     console.log(err);
   }
