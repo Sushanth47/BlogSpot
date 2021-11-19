@@ -4,6 +4,7 @@ const Blog = require("../models/blog");
 
 const blog_index = async (req, res) => {
   // console.log(req);
+  // console.log(req.user);
   var result = await Blog.aggregate([
     {
       $project: {
@@ -21,7 +22,11 @@ const blog_index = async (req, res) => {
 };
 
 const get_blog_details = async (req, res) => {
-  return res.render("blogs/details", { title: "blogDetails" });
+  console.log(req.params);
+  return res.render("blogs/details", {
+    title: "blogDetails",
+    _id: req.params.id,
+  });
 };
 
 const blog_details = async (req, res) => {
@@ -41,7 +46,7 @@ const blog_details = async (req, res) => {
       },
     },
   ]);
-  console.log(blogFind);
+  // console.log(blogFind);
 
   return res.status(200).json({
     blog: blogFind,
@@ -62,7 +67,7 @@ const blog_create_post = async (req, res) => {
       body: JSON.stringify(req.body.body),
       snippet: req.body.snippet,
     });
-    return res.redirect("/blogs");
+    return res.redirect("/");
   } catch (err) {
     console.log(err);
   }
@@ -70,10 +75,8 @@ const blog_create_post = async (req, res) => {
 
 const blog_delete = async (req, res) => {
   const id = req.params.id;
-
   await Blog.findByIdAndDelete(id);
-
-  return res.redirect(`/blogs`);
+  return res.redirect(`/`);
 };
 
 module.exports = {

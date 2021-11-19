@@ -8,14 +8,19 @@ const cookieParser = require("cookie-parser");
 var session = require("express-session");
 var flash = require("connect-flash");
 const blogRoutes = require("./routes/blogRoutes");
+const authRoutes = require("./routes/authRoutes");
 const home = require("./routes/home");
 const app = express();
 
 const dbURI = process.env.DB_URI;
 mongoose
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(dbURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
   .then(() =>
-    app.listen(process.env.PORT || 3000, async function () {
+    app.listen(process.env.PORT || 3000, "0.0.0.0", async function () {
       console.log(`Hello to 3000`);
     })
   )
@@ -25,17 +30,6 @@ mongoose
 app.set("view engine", "ejs");
 
 //middleware & static files;
-
-app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({ limit: "1mb" }));
-
-app.use(morgan("dev"));
-app.use("/", home);
-
-app.use("/blogs", blogRoutes);
-
 app.use(cookieParser());
 app.use(
   session({
@@ -46,10 +40,19 @@ app.use(
   })
 );
 app.use(flash());
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: "1mb" }));
 app.use((req, res, next) => {
-  res.locals.path = req.path;
+  res.locals.currentUser = req.user;
   next();
 });
+app.use(morgan("dev"));
+app.use("/", home);
+
+app.use("/blogs", blogRoutes);
+app.use("/auth", authRoutes);
 
 //routes
 

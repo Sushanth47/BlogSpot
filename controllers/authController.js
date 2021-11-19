@@ -1,14 +1,20 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-async function generateAuthToken(name, _id, res) {
+
+async function generateAuthToken(res, name, _id) {
   const expiration = 604800000;
-  const token = jwt.sign({ _id: _id, name: name }, process.env.jwtPrivateKey, {
-    expiresIn: process.env.DB_ENV === "testing" ? "1d" : "7d",
-  });
-  const obj = {
+  const token = jwt.sign(
+    { _id: _id, name: name, user: "User" },
+    process.env.jwtPrivateKey,
+    {
+      expiresIn: process.env.DB_ENV === "testing" ? "1d" : "7d",
+    }
+  );
+  console.log(token, "token");
+  var obj = {
     token: token,
-    _id: _id,
+    _id: 1,
   };
   res.cookie("token", obj, {
     expires: new Date(Date.now() + expiration),
@@ -17,25 +23,46 @@ async function generateAuthToken(name, _id, res) {
   });
   return token;
 }
-exports.userauth = async (req, res) => {
-  const { name, password } = req.body;
 
-  const user = await User.findOne({ name: name });
-  if (!user) {
-    var newuser = await User.create({
-      name: name,
-      password: password,
-      myBlogs: [],
-    });
-    var string = generateAuthToken(name, newuser._id, res);
-    newuser.token = string;
-    newuser.save();
-    return res.status(200).redirect("/blogs");
-  }
-  if (user.password != password)
-    return res.status(409).json("wrong Username/Password");
-  var string = generateAuthToken(name, user._id, res);
-  return res.status(200).redirect("blogs");
+exports.login = async (req, res) => {
+  return res.render("blogs/login", { message: req.flash("message") });
 };
 
-exports.logOut = async (req, res) => {};
+exports.signup = async (req, res) => {
+  return res.render("blogs/signup", { message: req.flash("message") });
+};
+
+exports.userauth = async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ name: username });
+  if (!user || user.password != password) {
+    req.flash("message", "Invalid Username/Password");
+    return res.status(409).redirect("/auth/login");
+  }
+  await generateAuthToken(res, username, user._id);
+  user.save();
+  req.flash("message", "User Created Successfully");
+  return res.status(200).redirect("/");
+};
+
+exports.signUp = async (req, res) => {
+  const { username, password } = req.body;
+  var user = await User.findOne({ email: email });
+  if (user) {
+    req.flash("message", "User Already Exists");
+    return res.redirect("/auth/login");
+  }
+  var newuser = await User.create({
+    name: username,
+    password: password,
+    myBlogs: [],
+  });
+  await generateAuthToken(res, username, newuser._id);
+
+  newuser.save();
+};
+
+exports.logOut = async (req, res) => {
+  res.clearCookies("token");
+  return res.redirect("/");
+};
