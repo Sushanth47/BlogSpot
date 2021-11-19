@@ -43,9 +43,11 @@
       <br />
       <div id="editor"></div>
       <div style="margin-top: 20px"></div>
+      <%if(currentUser){%>
       <a class="delete" href="/blogs/delete/<%=_id%>">
         <img src="/trashcan.svg" alt="delete icon" />
       </a>
+      <%}%>
     </div>
 
     <%- include("../partials/footer.ejs") %>
