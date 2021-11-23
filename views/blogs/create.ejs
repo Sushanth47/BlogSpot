@@ -23,7 +23,12 @@
         </div>
 
         <button id="saveDelta">Submit</button>
-        
+        <%if(message){%>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong><%=message%></strong> 
+            
+          </div>
+          <%}%>
     </div>
 
     <%- include('../partials/footer.ejs')%>
@@ -38,7 +43,6 @@
       [{size:['small', 'false', 'large', 'huge']}],
       [{color:[]}, {background:[]}],
       [ "image", "formula", 'video'],
-      // [{'font':[]}]
       [{ align: [] }],
       ['clean']
     ];
@@ -55,13 +59,13 @@
     })
     let url='/blogs/createPost'
     $('#saveDelta').click(async ()=>{
-      console.log('....')
      await axios.post(url,JSON.stringify({
       title : document.getElementById('title').value,
       snippet: document.getElementById('snippet').value,
       body: quill.getContents(),
     }),{headers:{"Content-Type" : "application/json"}}, 
     ).then((response)=>console.log(response))
+  
     .catch((err)=>console.log(err, 'errrrrrrr'));
     })
   </script>
